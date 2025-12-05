@@ -17,7 +17,8 @@ export const Navbar = () => {
         return;
       }
 
-      const res = await axios.get(`${BASE_API}/search-suggestions?q=${text}`);
+      const res = await axios.get(`${BASE_API}/api/search-suggestions?q=${text}`);
+
       setSuggestions(res.data);
     } catch (err) {
       console.log("Suggestion error", err);
