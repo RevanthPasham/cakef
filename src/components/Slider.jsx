@@ -18,40 +18,39 @@ const Slider = () => {
 
   return (
     <div className="w-full mt-3">
+
+      {/* Horizontal scroll slider */}
       <div
         className="
-          flex gap-4 
+          flex 
           overflow-x-auto 
-          scrollbar-hide 
-          pb-3
-          scroll-smooth
-          snap-x snap-mandatory
-          flex-nowrap
+          gap-4 
+          no-scrollbar 
+          w-full 
+          pb-2
         "
-        style={{
-          WebkitOverflowScrolling: "touch", // iPhone smooth scroll
-          msOverflowStyle: "none",         // IE/Edge
-          scrollbarWidth: "none",          // Firefox
-          touchAction: "pan-x",            // universal mobile scroll
-        }}
+        style={{ WebkitOverflowScrolling: "touch" }} // iPhone scroll fix
       >
         {(loading ? Array(4).fill({}) : categories).map((cat, index) => (
           <div
             key={cat._id || index}
             className="
-              min-w-[140px] sm:min-w-[150px] 
-              bg-white rounded-lg flex-shrink-0 
-              shadow cursor-pointer
-              snap-start
-              transition-all duration-200
-              hover:shadow-xl active:scale-95
+              bg-white 
+              rounded-xl 
+              shadow 
+              cursor-pointer 
+              min-w-[150px] 
+              transition-all 
+              duration-200 
+              hover:shadow-xl 
+              active:scale-95
             "
             onClick={() =>
               cat.name && navigate(`/category/${encodeURIComponent(cat.name)}`)
             }
           >
-            {/* IMAGE */}
-            <div className="w-full h-36 sm:h-40 overflow-hidden rounded-t-xl">
+            {/* IMAGE CONTAINER — FIXED HEIGHT FOR iPHONE */}
+            <div className="w-full h-40 rounded-t-xl overflow-hidden">
               <img
                 src={cat.image || "/placeholder.jpg"}
                 alt={cat.name || "Category"}
@@ -60,7 +59,7 @@ const Slider = () => {
               />
             </div>
 
-            {/* NAME */}
+            {/* TEXT */}
             {cat.name && (
               <p className="text-center py-2 text-sm font-semibold whitespace-nowrap">
                 {cat.name}
