@@ -18,24 +18,29 @@ const FilterBar = ({ filters, onFilterChange }) => {
   }, []);
 
   const getWrapperStyle = (key) => {
-    const isActive = filters[key] !== "all" && filters[key] !== "default";
+    const isActive =
+      filters[key] !== "all" && filters[key] !== "default";
 
-    return isActive
-      ? "bg-amber-100 border-amber-400"
-      : "bg-white border-gray-300";
+    return (
+      "border rounded-full px-2 h-8 flex items-center " +
+      (isActive
+        ? "bg-amber-100 border-amber-400"
+        : "bg-white border-gray-300")
+    );
   };
 
-  // ⭐ Ultra-compact pill style
- const selectStyle =
-  "text-[10px] bg-transparent pl-2 pr-4 rounded-full " +
-  "focus:outline-none appearance-none h-[24px] leading-[24px]";
-
+  // ⭐ Smoothed Mobile-Friendly Select Style
+  const selectStyle =
+    "text-[11px] bg-transparent pr-6 pl-1 rounded-full " +
+    "focus:outline-none appearance-none h-8 leading-8 cursor-pointer";
 
   return (
-    <div className="flex gap-1 whitespace-nowrap mb-4 items-center">
-
-      {/* Veg */}
-      <div className={`border flex  rounded-full px-1 h-[24px] ${getWrapperStyle("veg")}`}>
+    <div className="
+      flex gap-2 overflow-x-auto 
+      scrollbar-hide w-full py-1 mt-2
+    ">
+      {/* Veg Option */}
+      <div className={getWrapperStyle("veg")}>
         <select
           className={selectStyle}
           value={filters.veg}
@@ -48,35 +53,39 @@ const FilterBar = ({ filters, onFilterChange }) => {
       </div>
 
       {/* Flavours */}
-      <div className={`border flex rounded-full px-1 h-[24px] ${getWrapperStyle("flavour")}`}>
+      <div className={getWrapperStyle("flavour")}>
         <select
           className={selectStyle}
           value={filters.flavour}
           onChange={(e) => onFilterChange("flavour", e.target.value)}
         >
           <option value="all">Flavours</option>
-          {options.flavours.map((flav, i) => (
-            <option key={i} value={flav}>{flav}</option>
+          {options.flavours.map((f, i) => (
+            <option key={i} value={f}>
+              {f}
+            </option>
           ))}
         </select>
       </div>
 
       {/* Weights */}
-      <div className={`border flex rounded-full px-1 h-[24px] ${getWrapperStyle("weight")}`}>
+      <div className={getWrapperStyle("weight")}>
         <select
           className={selectStyle}
           value={filters.weight}
           onChange={(e) => onFilterChange("weight", e.target.value)}
         >
           <option value="all">Weights</option>
-          {options.weights.map((wt, i) => (
-            <option key={i} value={wt}>{wt}</option>
+          {options.weights.map((w, i) => (
+            <option key={i} value={w}>
+              {w}
+            </option>
           ))}
         </select>
       </div>
 
       {/* Sort */}
-      <div className={`border flex rounded-full px-1 h-[24px] ${getWrapperStyle("sort")}`}>
+      <div className={getWrapperStyle("sort")}>
         <select
           className={selectStyle}
           value={filters.sort}
@@ -87,7 +96,6 @@ const FilterBar = ({ filters, onFilterChange }) => {
           <option value="high">High → Low</option>
         </select>
       </div>
-
     </div>
   );
 };

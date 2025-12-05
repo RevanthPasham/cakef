@@ -8,7 +8,8 @@ const RelatedCakes = ({ cakeId, categories }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get(`${BASE_API}/api/related-cakes/${cakeId}`)
+    axios
+      .get(`${BASE_API}/api/related-cakes/${cakeId}`)
       .then((res) => setRelated(res.data))
       .catch(() => setRelated([]));
   }, [cakeId]);
@@ -17,89 +18,90 @@ const RelatedCakes = ({ cakeId, categories }) => {
 
   return (
     <div className="mt-8">
-      <h3 className="text-lg font-semibold mb-2">
+      <h3 className="text-lg font-semibold mb-3">
         More in "{categories?.[0] || "Category"}"
       </h3>
 
-      <div className="grid grid-cols-2 gap-3">
+      {/* Fully mobile-safe grid */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
         {related.map((cake) => {
           const price = cake.prices?.[0] ?? null;
           const cutPrice = cake.cutPrices?.[0] ?? null;
 
-          let discount = null;
-          if (cutPrice && price) {
-            discount = Math.round(((cutPrice - price) / cutPrice) * 100);
-          }
+          const discount =
+            cutPrice && price
+              ? Math.round(((cutPrice - price) / cutPrice) * 100)
+              : null;
 
           return (
-            <button
+            <div
               key={cake._id}
-              className="bg-white rounded-xl shadow active:scale-95 transition"
               onClick={() => navigate(`/cake/${cake._id}`)}
+              className="
+                bg-white rounded-xl shadow 
+                active:scale-95 
+                transition
+                cursor-pointer
+                flex-shrink-0
+              "
             >
-              {/* Image + Veg/NonVeg Badge */}
-              <div className="relative">
+              {/* IMAGE */}
+              <div className="relative w-full h-32 sm:h-36 overflow-hidden rounded-t-xl">
                 <img
                   src={cake.images?.[0] || "/placeholder.jpg"}
-                  className="h-28 w-full object-cover rounded-t-xl"
+                  className="w-full h-full object-cover"
+                  loading="lazy"
                 />
 
                 {/* Veg / Non-Veg Tag */}
                 {cake.veg !== undefined && (
                   <span
-                    className={`absolute top-1 right-1 text-[9px] px-1.5 py-[1px] rounded-full shadow 
-                      ${cake.veg ? "bg-green-600 text-white" : "bg-red-600 text-white"}`}
+                    className={`
+                      absolute top-1 right-1 
+                      text-[9px] px-1.5 py-[1px] rounded-full shadow 
+                      ${cake.veg ? "bg-green-600 text-white" : "bg-red-600 text-white"}
+                    `}
                   >
                     {cake.veg ? "Veg" : "Non-Veg"}
                   </span>
                 )}
               </div>
 
-              {/* Cake Details */}
+              {/* DETAILS */}
               <div className="p-2">
-
                 {/* Name */}
-                <p className="font-semibold text-[13px] leading-tight">
+                <p className="font-semibold text-[12px] sm:text-[13px] leading-tight line-clamp-2">
                   {cake.name}
                 </p>
 
-                {/* Price Row */}
+                {/* Pricing */}
                 <div className="flex items-center gap-1 mt-1 flex-wrap">
-
-                  {/* Cut Price */}
                   {cutPrice && (
-                    <span className="text-gray-400 line-through text-[11px]">
+                    <span className="text-gray-400 line-through text-[10px] sm:text-[11px]">
                       ₹{cutPrice}
                     </span>
                   )}
 
-                  {/* New Price */}
                   {price && (
-                    <span className="text-black font-bold text-[13px]">
+                    <span className="text-black font-bold text-[12px] sm:text-[13px]">
                       ₹{price}
                     </span>
                   )}
 
-                  {/* Discount */}
                   {discount > 0 && (
-                    <span className="text-[9px] font-semibold text-green-800 
-                      px-1.5 py-[1px] rounded-l-md 
-                      bg-gradient-to-r from-green-100 to-green-300
-                      relative inline-block">
-
+                    <span
+                      className="
+                        text-[9px] font-semibold text-green-800 
+                        px-1.5 py-[1px] rounded 
+                        bg-green-100
+                      "
+                    >
                       {discount}% OFF
-
-                      <span className="absolute right-[-6px] top-0 h-full w-[6px] 
-                        bg-gradient-to-r from-green-300 to-green-400 
-                        skew-x-[20deg] rounded-r-md">
-                      </span>
-
                     </span>
                   )}
-
                 </div>
               </div>
-            </button>
+            </div>
           );
         })}
       </div>

@@ -26,9 +26,7 @@ const CakeDetail = () => {
   }, [id]);
 
   if (!cake)
-    return (
-      <p className="text-center mt-10">Loading cake details...</p>
-    );
+    return <p className="text-center mt-10">Loading cake details...</p>;
 
   const images = cake.images || [];
   const weights = cake.weightOptions || [];
@@ -61,18 +59,39 @@ const CakeDetail = () => {
   };
 
   return (
-    <div className="pb-20">
-
-      {/* Back Button */}
-      <button
-        onClick={() => navigate(-1)}
-        className="absolute top-4 left-4 bg-white p-2 rounded-full shadow"
-      >
-        ←
-      </button>
-
-      {/* Image Slider */}
+    <div className="pb-20 relative">
+      {/* ================================
+          IMAGE SLIDER
+      ================================= */}
       <div className="relative h-64 overflow-hidden rounded-b-xl">
+
+        {/* ⭐ TOP CONTROLS — Back Button + Veg Tag */}
+        <div className="absolute top-4 left-0 w-full flex justify-between px-4 z-30">
+          
+          {/* Back Button */}
+          <button
+            onClick={() => navigate(-1)}
+            className="bg-white p-2 rounded-full shadow text-lg active:scale-90 transition"
+          >
+            ←
+          </button>
+
+          {/* Veg / Non-Veg Tag */}
+          {cake.veg !== undefined && (
+            <span
+              className={`text-[11px] flex items-center px-2 py-[2px] rounded-full shadow 
+                ${
+                  cake.veg
+                    ? "bg-green-600 text-white"
+                    : "bg-red-600 text-white"
+                }`}
+            >
+              {cake.veg ? "Veg" : "Non-Veg"}
+            </span>
+          )}
+        </div>
+
+        {/* Slider Images */}
         <div
           className="flex transition-transform duration-500"
           style={{ transform: `translateX(-${imgIndex * 100}%)` }}
@@ -86,24 +105,10 @@ const CakeDetail = () => {
           ))}
         </div>
 
-        {/* Veg / Non-Veg Tag on Image */}
-        {cake.veg !== undefined && (
-          <span
-            className={`absolute top-2 right-2 text-[11px] px-2 py-[2px] rounded-full shadow 
-              ${cake.veg
-                ? "bg-green-600 text-white"
-                : "bg-red-600 text-white"}`}
-          >
-            {cake.veg ? "Veg" : "Non-Veg"}
-          </span>
-        )}
-
         {/* Slider Arrows */}
         <button
           onClick={() =>
-            setImgIndex(
-              imgIndex === 0 ? images.length - 1 : imgIndex - 1
-            )
+            setImgIndex(imgIndex === 0 ? images.length - 1 : imgIndex - 1)
           }
           className="absolute top-1/2 left-3 p-2 bg-white rounded-full shadow"
         >
@@ -122,47 +127,45 @@ const CakeDetail = () => {
         </button>
       </div>
 
-      {/* Details */}
+      {/* ================================
+          CAKE DETAILS
+      ================================= */}
       <div className="p-4 space-y-4">
         <h2 className="text-xl font-bold">{name}</h2>
         <p className="text-gray-600">{longDescription}</p>
 
-        {/* Price Section */}
+        {/* Prices */}
         <div className="flex items-center gap-3 mt-2">
 
-          {/* Cut Price */}
           {originalPrice && (
             <span className="text-gray-400 line-through text-sm">
               ₹{originalPrice}
             </span>
           )}
 
-          {/* New Price */}
           {newPrice && (
             <span className="text-black font-bold text-lg">
               ₹{newPrice}
             </span>
           )}
 
-          {/* Shiny Discount */}
           {discount > 0 && (
             <span className="text-[11px] font-semibold text-green-800 
               px-2 py-[2px] rounded-l-md 
               bg-gradient-to-r from-green-100 to-green-300
-              relative inline-block">
-
+              relative inline-block"
+            >
               {discount}% OFF
-
-              <span className="absolute right-[-8px] top-0 h-full w-[8px] 
-                bg-gradient-to-r from-green-300 to-green-400 
-                skew-x-[20deg] rounded-r-md">
+              <span
+                className="absolute right-[-8px] top-0 h-full w-[8px] 
+                  bg-gradient-to-r from-green-300 to-green-400 
+                  skew-x-[20deg] rounded-r-md">
               </span>
             </span>
           )}
-
         </div>
 
-        {/* Weight Options */}
+        {/* Weight options */}
         <div className="flex gap-2 flex-wrap mt-2">
           {weights.map((w, i) => (
             <button
@@ -179,7 +182,7 @@ const CakeDetail = () => {
           ))}
         </div>
 
-        {/* WhatsApp Button */}
+        {/* WhatsApp Order */}
         <button
           onClick={orderNow}
           className="w-full bg-green-600 text-white py-3 rounded-xl mt-3"
@@ -188,10 +191,7 @@ const CakeDetail = () => {
         </button>
 
         {/* Related Cakes */}
-        <RelatedCakes
-          cakeId={cake._id}
-          categories={cake.categories}
-        />
+        <RelatedCakes cakeId={cake._id} categories={cake.categories} />
       </div>
     </div>
   );

@@ -10,6 +10,7 @@ export const Navbar = () => {
   const [suggestions, setSuggestions] = useState([]);
   const [showBox, setShowBox] = useState(false);
 
+  // Fetch suggestions
   const fetchSuggestions = async (text) => {
     try {
       if (!text.trim()) {
@@ -17,14 +18,16 @@ export const Navbar = () => {
         return;
       }
 
-      const res = await axios.get(`${BASE_API}/api/search-suggestions?q=${text}`);
-
+      const res = await axios.get(
+        `${BASE_API}/api/search-suggestions?q=${text}`
+      );
       setSuggestions(res.data);
     } catch (err) {
       console.log("Suggestion error", err);
     }
   };
 
+  // When user types
   const handleChange = (e) => {
     const value = e.target.value;
     setQuery(value);
@@ -38,6 +41,7 @@ export const Navbar = () => {
     }
   };
 
+  // When user presses Enter
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
       navigate(`/search?q=${query}`);
@@ -46,6 +50,7 @@ export const Navbar = () => {
     }
   };
 
+  // Click on a suggestion
   const handleSuggestionClick = (value) => {
     setQuery(value);
     navigate(`/search?q=${value}`);
@@ -53,16 +58,25 @@ export const Navbar = () => {
     setSuggestions([]);
   };
 
+  // Prevent closing dropdown when clicking inside
+  const blockClose = (e) => e.stopPropagation();
+
+  // Close dropdown on outside click
   useEffect(() => {
-    const closeSuggestions = () => setShowBox(false);
-    window.addEventListener("click", closeSuggestions);
-    return () => window.removeEventListener("click", closeSuggestions);
+    const close = () => setShowBox(false);
+    window.addEventListener("click", close);
+    return () => window.removeEventListener("click", close);
   }, []);
 
   return (
-    <div className="flex items-center justify-between p-3 shadow bg-white sticky top-0 z-20 relative">
-
-      {/* LOGO — Click to go Home */}
+    <div
+      className="
+        flex items-center justify-between 
+        p-3 bg-white shadow 
+        sticky top-0 z-20 
+      "
+    >
+      {/* LOGO */}
       <div
         className="text-xl font-bold text-pink-600 cursor-pointer select-none"
         onClick={() => navigate("/")}
@@ -71,27 +85,47 @@ export const Navbar = () => {
       </div>
 
       {/* SEARCH BAR */}
-      <div className="relative w-44 md:w-60">
+      <div className="relative w-40 sm:w-52 md:w-60" onClick={blockClose}>
         <input
           type="text"
           value={query}
           onChange={handleChange}
           onKeyDown={handleKeyPress}
           placeholder="Search cakes..."
-          className="border rounded-full px-4 py-1 w-full text-sm outline-none focus:ring-2 focus:ring-pink-300"
-          onClick={(e) => e.stopPropagation()}
+          className="
+            border rounded-full px-4 py-1 
+            w-full text-sm 
+            outline-none 
+            focus:ring-2 focus:ring-pink-300
+          "
         />
 
+        {/* DROPDOWN */}
         {showBox && suggestions.length > 0 && (
           <div
-            className="absolute top-10 left-0 w-full bg-white shadow-xl rounded-xl max-h-60 overflow-y-auto p-2 z-30"
-            onClick={(e) => e.stopPropagation()}
+            className="
+              absolute top-10 left-0 w-full 
+              bg-white shadow-xl rounded-xl 
+              max-h-60 overflow-y-auto 
+              p-2 z-30
+            "
+            onClick={blockClose}
+            style={{
+              WebkitOverflowScrolling: "touch", // iPhone smooth scroll
+              scrollbarWidth: "none", // Firefox hide scrollbar
+            }}
           >
             {suggestions.map((item, index) => (
               <p
                 key={index}
                 onClick={() => handleSuggestionClick(item)}
-                className="p-2 rounded-lg hover:bg-pink-100 cursor-pointer text-sm"
+                className="
+                  p-2 rounded-lg 
+                  hover:bg-pink-100 
+                  cursor-pointer 
+                  text-sm 
+                  active:bg-pink-200
+                "
               >
                 {item}
               </p>
@@ -100,11 +134,11 @@ export const Navbar = () => {
         )}
       </div>
 
+      {/* ICONS */}
       <div className="flex gap-3 text-xl">
         <span>❤️</span>
         <span>☰</span>
       </div>
-
     </div>
   );
 };

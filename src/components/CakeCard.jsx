@@ -19,51 +19,79 @@ const CakeCard = ({ category }) => {
   }, [category]);
 
   return (
-    <div className="grid grid-cols-2 gap-3 mt-4">
+    <div
+      className="
+        grid 
+        grid-cols-2 
+        sm:grid-cols-2 
+        md:grid-cols-3 
+        gap-4 mt-4
+      "
+    >
       {cakes.map((cake) => {
         const originalPrice = cake.cutPrices?.[0] ?? null;
         const newPrice = cake.prices?.[0] ?? null;
 
         let discount = null;
         if (originalPrice && newPrice) {
-          discount = Math.round(((originalPrice - newPrice) / originalPrice) * 100);
+          discount = Math.round(
+            ((originalPrice - newPrice) / originalPrice) * 100
+          );
         }
 
         return (
           <div
             key={cake._id}
             onClick={() => navigate(`/cake/${cake._id}`)}
-            className="bg-white rounded-xl shadow cursor-pointer active:scale-95 transition"
+            className="
+              bg-white 
+              rounded-2xl 
+              shadow-sm 
+              border 
+              cursor-pointer 
+              active:scale-[0.97] 
+              transition 
+              overflow-hidden
+            "
           >
-            {/* 🔥 Image with badge */}
+            {/* Image */}
             <div className="relative">
               <img
-                src={cake.images?.[0] || "/placeholder.jpg"}
-                className="h-40 w-full object-cover rounded-t-xl"
+                src={cake.images?.[0] || '/placeholder.jpg'}
+                className="
+                  w-full 
+                  h-36
+                  sm:h-40
+                  md:h-44 
+                  object-cover 
+                "
               />
 
-              {/* Veg/Non-Veg Badge on Image */}
+              {/* Veg/Non-Veg Badge */}
               {cake.veg !== undefined && (
                 <span
-                  className={`absolute top-2 right-2 text-[10px] px-2 py-[1px] rounded-full 
-                    shadow 
-                    ${cake.veg ? "bg-green-600 text-white" : "bg-red-600 text-white"}`}
+                  className={`
+                    absolute top-2 right-2
+                    text-[10px] px-2 py-[2px] rounded-full shadow-md 
+                    ${cake.veg ? "bg-green-600" : "bg-red-600"} 
+                    text-white
+                  `}
                 >
                   {cake.veg ? "Veg" : "Non-Veg"}
                 </span>
               )}
             </div>
 
-            <div className="p-3">
+            {/* Text Area */}
+            <div className="p-3 space-y-1">
 
               {/* Cake Name */}
-              {cake.name && (
-                <p className="font-semibold text-sm leading-tight">{cake.name}</p>
-              )}
+              <p className="font-semibold text-[13px] leading-tight truncate">
+                {cake.name}
+              </p>
 
               {/* Price Row */}
-              <div className="flex items-center gap-2 mt-1 flex-wrap">
-
+              <div className="flex items-center gap-2 flex-wrap mt-1">
                 {originalPrice && (
                   <span className="text-gray-400 line-through text-xs">
                     ₹{originalPrice}
@@ -77,18 +105,23 @@ const CakeCard = ({ category }) => {
                 )}
 
                 {discount > 0 && (
-                  <span className="text-[10px] font-semibold text-green-800 
-                    px-2 py-[2px] rounded-l-md 
-                    bg-gradient-to-r from-green-100 to-green-300
-                    relative inline-block">
-
+                  <span
+                    className="
+                      text-[9px] font-semibold text-green-800 
+                      px-1.5 py-[1px] rounded-l-md 
+                      bg-gradient-to-r from-green-100 to-green-300
+                      relative inline-block
+                    "
+                  >
                     {discount}% OFF
 
-                    <span className="absolute right-[-8px] top-0 h-full w-[8px] 
-                      bg-gradient-to-r from-green-300 to-green-400 
-                      skew-x-[20deg] rounded-r-md">
-                    </span>
-
+                    <span
+                      className="
+                        absolute right-[-6px] top-0 h-full w-[6px] 
+                        bg-gradient-to-r from-green-300 to-green-400 
+                        skew-x-[20deg] rounded-r-md
+                      "
+                    ></span>
                   </span>
                 )}
               </div>

@@ -71,8 +71,9 @@ const SearchPage = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="p-4">
-      <h2 className="text-md font-semibold">
+    <div className="p-4 pb-20">
+
+      <h2 className="text-md font-semibold mb-2">
         Search results for: <span className="text-pink-600">{query}</span>
       </h2>
 
@@ -80,7 +81,17 @@ const SearchPage = () => {
       <FilterBar filters={filters} onFilterChange={onFilterChange} />
 
       {/* Search Results */}
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-4">
+      <div
+        className="
+          grid 
+          grid-cols-2 
+          sm:grid-cols-2 
+          md:grid-cols-3 
+          lg:grid-cols-4 
+          gap-4 
+          mt-4
+        "
+      >
         {filtered.map((cake) => {
           const price = cake.prices?.[0] ?? null;
           const cutPrice = cake.cutPrices?.[0] ?? null;
@@ -94,67 +105,77 @@ const SearchPage = () => {
             <div
               key={cake._id}
               onClick={() => navigate(`/cake/${cake._id}`)}
-              className="bg-white rounded-xl shadow cursor-pointer active:scale-95 transition"
+              className="
+                bg-white 
+                rounded-xl 
+                shadow 
+                cursor-pointer 
+                active:scale-95 
+                transition 
+                flex flex-col 
+                min-h-[230px]
+              "
             >
-              <div className="relative">
+              {/* Image */}
+              <div className="relative w-full">
                 <img
                   src={cake.images?.[0] || "/placeholder.jpg"}
-                  className="h-40 w-full object-cover rounded-t-xl"
+                  className="w-full h-36 sm:h-40 md:h-44 lg:h-48 object-cover rounded-t-xl"
                 />
 
-                {/* Veg / Non-Veg Tag */}
+                {/* Veg / Non-Veg */}
                 {cake.veg !== undefined && (
                   <span
                     className={`absolute top-2 right-2 text-[10px] px-2 py-[1px] rounded-full shadow 
-                    ${cake.veg ? "bg-green-600 text-white" : "bg-red-600 text-white"}`}
+                      ${cake.veg ? "bg-green-600 text-white" : "bg-red-600 text-white"}`}
                   >
                     {cake.veg ? "Veg" : "Non-Veg"}
                   </span>
                 )}
               </div>
 
-              <div className="p-2">
-
-                {/* Cake Name */}
+              {/* Info */}
+              <div className="p-2 flex flex-col justify-between">
                 {cake.name && (
-                  <p className="font-semibold text-sm leading-tight">
+                  <p className="font-semibold text-sm leading-tight line-clamp-2">
                     {cake.name}
                   </p>
                 )}
 
-                {/* Price + Discount */}
+                {/* Price */}
                 <div className="flex items-center gap-1 mt-1 flex-wrap">
 
-                  {/* Cut Price */}
                   {cutPrice && (
                     <span className="text-gray-400 line-through text-xs">
                       ₹{cutPrice}
                     </span>
                   )}
 
-                  {/* New Price */}
                   {price && (
                     <span className="text-black font-bold text-sm">
                       ₹{price}
                     </span>
                   )}
 
-                  {/* Shiny Discount */}
                   {discount > 0 && (
-                    <span className="text-[9px] font-semibold text-green-800 
-                      px-1.5 py-[1px] rounded-l-md 
-                      bg-gradient-to-r from-green-100 to-green-300
-                      relative inline-block">
-
+                    <span
+                      className="
+                        text-[9px] font-semibold text-green-800 
+                        px-1.5 py-[1px] rounded-l-md 
+                        bg-gradient-to-r from-green-100 to-green-300
+                        relative inline-block
+                      "
+                    >
                       {discount}% OFF
-
-                      <span className="absolute right-[-6px] top-0 h-full w-[6px] 
-                        bg-gradient-to-r from-green-300 to-green-400 
-                        skew-x-[20deg] rounded-r-md">
-                      </span>
+                      <span
+                        className="
+                          absolute right-[-6px] top-0 h-full w-[6px] 
+                          bg-gradient-to-r from-green-300 to-green-400 
+                          skew-x-[20deg] rounded-r-md
+                        "
+                      ></span>
                     </span>
                   )}
-
                 </div>
               </div>
             </div>
