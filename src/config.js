@@ -1,1 +1,1 @@
-export const BASE_API = "https://cakeb-one.vercel.app/";
+export const BASE_API = "https://cakeb-one.vercel.app";
