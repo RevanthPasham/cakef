@@ -11,46 +11,61 @@ const Slider = () => {
   useEffect(() => {
     axios
       .get(`${BASE_API}/api/categories`)
-      .then((res) => {
-        setCategories(res.data);
-      })
+      .then((res) => setCategories(res.data))
       .catch((err) => console.error("Categories error:", err))
       .finally(() => setLoading(false));
   }, []);
 
-  if (loading) {
-    return (
-      <div className="flex gap-4 overflow-x-scroll scrollbar-hide mt-3 pb-3">
-        {Array(4).fill().map((_, i) => (
-          <div key={i} className="min-w-[150px] bg-gray-200 h-52 rounded-lg animate-pulse" />
+  return (
+    <div className="w-full mt-3">
+      <div
+        className="
+          flex gap-4 pb-3
+          overflow-x-auto
+          scrollbar-hide
+          scroll-smooth
+          snap-x snap-mandatory
+          touch-pan-x
+        "
+        style={{ WebkitOverflowScrolling: "touch" }} // iPhone smooth scroll
+      >
+        {(loading ? Array(4).fill({}) : categories).map((cat, i) => (
+          <div
+            key={cat._id || i}
+            className="
+              min-w-[150px]
+              bg-white
+              rounded-lg
+              flex-shrink-0
+              snap-start
+              shadow 
+              cursor-pointer
+              transition-all duration-200 
+              hover:shadow-xl active:scale-95
+            "
+            onClick={() =>
+              cat.name && navigate(`/category/${encodeURIComponent(cat.name)}`)
+            }
+          >
+            {/* Image */}
+            <div className="w-full h-40 overflow-hidden rounded-t-xl">
+              <img
+                src={cat.image || "/placeholder.jpg"}
+                alt={cat.name || "Category"}
+                className="w-full h-full object-cover"
+                onError={(e) => (e.target.src = "/placeholder.jpg")}
+              />
+            </div>
+
+            {/* Name */}
+            {cat.name && (
+              <p className="text-center mt-1 mb-2 text-sm font-semibold px-2">
+                {cat.name}
+              </p>
+            )}
+          </div>
         ))}
       </div>
-    );
-  }
-
-  return (
-    <div className="flex gap-4 overflow-x-scroll scrollbar-hide mt-3 pb-3">
-      {categories.map((cat) => (
-        <div
-          key={cat._id}
-          className="min-w-[150px] rounded-lg shadow cursor-pointer hover:shadow-xl active:scale-95 transition-all duration-200 flex-shrink-0"
-          onClick={() => cat.name && navigate(`/category/${encodeURIComponent(cat.name)}`)}
-        >
-          <img
-            src={cat.image}
-            alt={cat.name}
-            className="w-full h-40 rounded-t-xl object-cover"
-            onError={(e) => (e.target.src = "/placeholder.jpg")}
-          />
-
-          {/* ⭐ Hide name if not present */}
-          {cat.name && (
-            <p className="text-center mt-1 text-sm font-semibold p-2">
-              {cat.name}
-            </p>
-          )}
-        </div>
-      ))}
     </div>
   );
 };
